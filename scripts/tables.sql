@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS orders (
   quantity INT
 );
 
-
 CREATE TABLE IF NOT EXISTS new_table (
   id SERIAL PRIMARY KEY,
   item TEXT,
