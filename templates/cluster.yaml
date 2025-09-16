@@ -1,0 +1,38 @@
+{{- range .Values.spock.clusters }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  instances: {{ .replicas }}
+  imageName: {{ .image }}
+  enableSuperuserAccess: true
+  storage:
+    size: {{ .storage }}
+  postgresql:
+    shared_preload_libraries:
+      - "spock"
+    parameters:
+      shared_buffers: "4GB"
+      effective_cache_size: "12GB"
+      maintenance_work_mem: "2GB"
+      work_mem: "64MB"
+      max_connections: "200"
+      track_commit_timestamp: "on"
+      wal_level: "logical"
+      max_replication_slots: "20"
+      max_wal_senders: "20"
+      max_worker_processes: "12"
+      effective_io_concurrency: "200"
+      random_page_cost: "1.1"
+      checkpoint_completion_target: "0.9"
+  bootstrap:
+    initdb:
+      database: {{ $.Values.spock.database }}
+      owner: {{ $.Values.spock.owner }}
+      postInitApplicationSQL:
+        - CREATE EXTENSION IF NOT EXISTS spock;
+---
+{{- end }}
+

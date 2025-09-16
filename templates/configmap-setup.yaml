@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-setup-script
+  namespace: {{ .Release.Namespace }}
+data:
+  setup.sh: |-
+{{ .Files.Get "scripts/setup.sh" | indent 4 }}
+  tables.sql: |-
+{{ .Files.Get "scripts/tables.sql" | indent 4 }}
+

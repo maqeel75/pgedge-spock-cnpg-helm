@@ -1,0 +1,30 @@
+spock:
+  database: appdb
+  owner: appuser
+  clusters:
+    - name: cluster-a
+      replicas: 3
+      image: ghcr.io/pgedge/pgedge-postgres:17-spock5-minimal
+      storage: 1Gi
+      superuserSecretName: cluster-a-superuser
+      superuserSecretKey: password
+    - name: cluster-b
+      replicas: 3
+      image: ghcr.io/pgedge/pgedge-postgres:17-spock5-minimal
+      storage: 1Gi
+      superuserSecretName: cluster-b-superuser
+      superuserSecretKey: password
+    - name: cluster-c
+      replicas: 3
+      image: ghcr.io/pgedge/pgedge-postgres:17-spock5-minimal
+      storage: 1Gi
+      superuserSecretName: cluster-c-superuser
+      superuserSecretKey: password
+  clusterNames:
+    - cluster-a
+    - cluster-b
+    - cluster-c
+  tables:
+    - test_table
+    - orders
+    - new_table

@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-spock-setup
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "1"
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: spock-setup
+        image: ghcr.io/pgedge/pgedge-postgres:17-spock5-minimal
+        command: ["/bin/bash", "/scripts/setup.sh"]
+        env:
+          - name: APPDB
+            value: {{ .Values.spock.database | quote }}
+          - name: NAMESPACE
+            value: {{ .Release.Namespace | quote }}
+          - name: CLUSTERS
+            value: {{ join " " .Values.spock.clusterNames | quote }}
+          - name: TABLES
+            value: {{ join " " .Values.spock.tables | quote }}
+        {{- range .Values.spock.clusters }}
+          - name: PGPASSWORD_{{ .name | upper | replace "-" "_" }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .superuserSecretName }}
+                key: {{ .superuserSecretKey }}
+        {{- end }}
+        volumeMounts:
+          - name: setup-script
+            mountPath: /scripts
+            readOnly: true
+      volumes:
+        - name: setup-script
+          configMap:
+            name: {{ .Release.Name }}-setup-script
+            defaultMode: 0755
