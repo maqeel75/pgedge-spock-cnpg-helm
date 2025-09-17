@@ -1,0 +1,68 @@
+{{- if .Values.spock.monitoring.enabled }}
+
+# ===============================
+# ServiceMonitors for all clusters
+# ===============================
+{{- range .Values.spock.clusters }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .name }}-servicemonitor
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/cluster: {{ .name }}
+  namespaceSelector:
+    matchNames:
+      - {{ $.Release.Namespace }}
+  endpoints:
+    - port: metrics
+      interval: 15s
+---
+{{- end }}
+
+# ===============================
+# CNPG Grafana Dashboard
+# ===============================
+{{- if .Values.spock.monitoring.grafanaDashboard }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cnpg-overview-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  cnpg-overview.json: |
+    {
+      "title": "CNPG Overview",
+      "panels": [
+        {
+          "type": "graph",
+          "title": "Cluster CPU Usage",
+          "targets": [
+            {
+              "expr": "rate(container_cpu_usage_seconds_total{pod=~\"cluster-.*\"}[1m])",
+              "legendFormat": "{{`{{pod}}`}}"
+            }
+          ]
+        },
+        {
+          "type": "graph",
+          "title": "Primary/Replica WAL Lag",
+          "targets": [
+            {
+              "expr": "pg_last_wal_receive_lsn_lag_bytes{cnpg_io_cluster=~\"cluster-.*\"}",
+              "legendFormat": "{{`{{cnpg_io_cluster}}`}}"
+            }
+          ]
+        }
+      ]
+    }
+{{- end }}
+
+{{- end }}
+

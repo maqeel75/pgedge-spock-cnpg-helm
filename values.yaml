@@ -34,3 +34,7 @@ spock:
     - test_table
     - orders
     - new_table
+  monitoring:
+    enabled: true
+    prometheusOperator: true
+    grafanaDashboard: true
