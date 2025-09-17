@@ -8,6 +8,8 @@ spec:
   instances: {{ .replicas }}
   imageName: {{ .image }}
   enableSuperuserAccess: true
+  superuserSecret:
+    name: {{ .name }}-superuser
   storage:
     size: {{ .storage }}
   postgresql:
@@ -31,6 +33,8 @@ spec:
     initdb:
       database: {{ $.Values.spock.database }}
       owner: {{ $.Values.spock.owner }}
+      secret:
+        name: {{ $.Values.spock.appuser.secretName }}  # same for all clusters
       postInitApplicationSQL:
         - CREATE EXTENSION IF NOT EXISTS spock;
 ---

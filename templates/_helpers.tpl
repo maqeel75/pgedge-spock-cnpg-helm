@@ -8,3 +8,12 @@
 {{- end }}
 {{- end }}
 
+{{- define "pgedge-spock.haproxy-backend-servers" -}}
+{{- $clusters := .clusters -}}
+{{- $suffix := .suffix -}}
+{{- $Release := .Release -}}
+{{- range $i, $c := $clusters }}
+  server {{ $c.name }} {{ $c.name }}-{{ $suffix }}.{{ $Release.Namespace }}.svc.cluster.local:5432 check
+{{- end }}
+{{- end }}
+

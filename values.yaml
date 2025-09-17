@@ -1,6 +1,12 @@
 spock:
   database: appdb
   owner: appuser
+  superuser:
+    password: postgres
+    secretName: superuser-secret
+  appuser:
+    password: testing
+    secretName: appuser-secret
   clusters:
     - name: cluster-a
       replicas: 3
