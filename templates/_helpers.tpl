@@ -1,3 +1,6 @@
+{{/*
+Spock cluster environment variables (passwords from secrets)
+*/}}
 {{- define "pgedge-spock.cluster-env-vars" -}}
 {{- range $i, $c := .Values.spock.clusters }}
 - name: PGPASSWORD_{{ upper (replace $c.name "-" "_") }}
@@ -8,6 +11,9 @@
 {{- end }}
 {{- end }}
 
+{{/*
+Generate HAProxy backend servers list
+*/}}
 {{- define "pgedge-spock.haproxy-backend-servers" -}}
 {{- $clusters := .clusters -}}
 {{- $suffix := .suffix -}}

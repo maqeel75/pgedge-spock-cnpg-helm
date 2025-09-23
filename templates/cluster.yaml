@@ -11,7 +11,9 @@ spec:
   superuserSecret:
     name: {{ .name }}-superuser
   storage:
-    size: {{ .storage }}
+    size: {{ .storage.size }}
+  #walStorage:
+  #  size: 20Gi
   postgresql:
     shared_preload_libraries:
       - "spock"
@@ -29,6 +31,11 @@ spec:
       effective_io_concurrency: "200"
       random_page_cost: "1.1"
       checkpoint_completion_target: "0.9"
+      # Retain WAL for 7 days
+      #wal_keep_size: "20480"         # ~20GB WAL (tune depending on workload)
+      #max_wal_size: "10GB"
+      #archive_mode: "on"
+      #archive_timeout: "60s"
   bootstrap:
     initdb:
       database: {{ $.Values.spock.database }}

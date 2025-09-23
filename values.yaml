@@ -9,21 +9,24 @@ spock:
     secretName: appuser-secret
   clusters:
     - name: cluster-a
-      replicas: 3
+      replicas: 1
       image: ghcr.io/pgedge/pgedge-postgres:17-spock5-minimal
-      storage: 1Gi
+      storage:
+        size: 20Gi
       superuserSecretName: cluster-a-superuser
       superuserSecretKey: password
     - name: cluster-b
-      replicas: 3
+      replicas: 1
       image: ghcr.io/pgedge/pgedge-postgres:17-spock5-minimal
-      storage: 1Gi
+      storage:
+        size: 20Gi
       superuserSecretName: cluster-b-superuser
       superuserSecretKey: password
     - name: cluster-c
-      replicas: 3
+      replicas: 1
       image: ghcr.io/pgedge/pgedge-postgres:17-spock5-minimal
-      storage: 1Gi
+      storage:
+        size: 20Gi
       superuserSecretName: cluster-c-superuser
       superuserSecretKey: password
   clusterNames:
