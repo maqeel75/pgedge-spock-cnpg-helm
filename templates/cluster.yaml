@@ -12,8 +12,8 @@ spec:
     name: {{ .name }}-superuser
   storage:
     size: {{ .storage.size }}
-  #walStorage:
-  #  size: 20Gi
+  walStorage:
+    size: 20Gi
   postgresql:
     shared_preload_libraries:
       - "spock"
