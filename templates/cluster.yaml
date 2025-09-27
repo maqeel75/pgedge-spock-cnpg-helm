@@ -4,6 +4,8 @@ kind: Cluster
 metadata:
   name: {{ .name }}
   namespace: {{ $.Release.Namespace }}
+  annotations:
+    "argocd.argoproj.io/sync-wave": "0"
 spec:
   instances: {{ .replicas }}
   imageName: {{ .image }}
